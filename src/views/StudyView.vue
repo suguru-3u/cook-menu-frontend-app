@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 const counter = reactive({
   count: 0,
   message: ''
@@ -16,7 +16,51 @@ function decrement() {
   counter.count--
 }
 
-//  v-model
+//  v-if
+const h1ToggleFlg = ref(true)
+function h1Toggle() {
+  h1ToggleFlg.value = !h1ToggleFlg.value
+}
+
+// v-for
+let countId = 0
+const todoLists = ref([
+  {
+    id: countId++,
+    title: 'test1',
+    done: false
+  },
+  {
+    id: countId++,
+    title: 'test2',
+    done: false
+  },
+  {
+    id: countId++,
+    title: 'test3',
+    done: false
+  }
+])
+const inputTodoTitle = ref('')
+function addTodoList() {
+  todoLists.value.push({
+    id: countId++,
+    title: inputTodoTitle.value,
+    done: false
+  })
+  inputTodoTitle.value = ''
+}
+function removeTodo(todoId: number) {
+  todoLists.value = todoLists.value.filter((todoList) => todoList.id != todoId)
+}
+
+// computed
+const hideCompleted = ref(false)
+const filterTodoLists = computed(() => {
+  return hideCompleted.value
+    ? todoLists.value.filter((todoList) => !todoList.done)
+    : todoLists.value
+})
 </script>
 
 <template>
@@ -33,6 +77,27 @@ function decrement() {
     <br />
     <input v-model="counter.message" />
     <p>{{ counter.message }}</p>
+    <br />
+    <br />
+    <h1 v-if="h1ToggleFlg">Toggle display</h1>
+    <h1 v-else>Toggle not display</h1>
+    <button v-on:click="h1Toggle">Toggle</button>
+    <br />
+    <br />
+    <input v-model="inputTodoTitle" />
+    <button v-on:click="addTodoList">add</button>
+    <ul>
+      <li v-for="todoList in filterTodoLists" :key="todoList.id">
+        <input type="checkbox" v-model="todoList.done" />
+        <span :class="{ done: todoList.done }">{{ todoList.title }}</span>
+        <button v-on:click="removeTodo(todoList.id)">X</button>
+      </li>
+    </ul>
+    <br />
+    <br />
+    <button @click="hideCompleted = !hideCompleted">
+      {{ hideCompleted ? 'Show all' : 'Hide completed' }}
+    </button>
   </div>
 </template>
 
@@ -45,6 +110,9 @@ function decrement() {
   }
   .text {
     color: aqua;
+  }
+  .done {
+    text-decoration: line-through;
   }
 }
 </style>
