@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, onMounted, watch } from 'vue'
+import ChildComp from '@/components/ChildComp.vue'
+
 const counter = reactive({
   count: 0,
   message: ''
@@ -61,6 +63,33 @@ const filterTodoLists = computed(() => {
     ? todoLists.value.filter((todoList) => !todoList.done)
     : todoLists.value
 })
+
+// ライフサイクル
+const pElementRef = ref<HTMLElement | null>(null)
+onMounted(() => {
+  console.log('Mountが実行されました')
+  pElementRef.value!.textContent = 'hello Mount'
+})
+
+// watch
+const todoId = ref(1)
+const todoData = ref(null)
+
+async function fetchData() {
+  todoData.value = null
+  const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todoId.value}`)
+  todoData.value = await res.json()
+}
+fetchData()
+watch(todoId, fetchData)
+
+// props
+const greeting = ref('Hello Children Compnent')
+
+// emit
+function emitLog() {
+  console.log('子コンポーネントからイベントを受信しました！')
+}
 </script>
 
 <template>
@@ -98,6 +127,18 @@ const filterTodoLists = computed(() => {
     <button @click="hideCompleted = !hideCompleted">
       {{ hideCompleted ? 'Show all' : 'Hide completed' }}
     </button>
+    <br />
+    <br />
+    <p ref="pElementRef">hello</p>
+    <br />
+    <br />
+    <p>Todo id: {{ todoId }}</p>
+    <button @click="todoId++" :disabled="!todoData">Fetch next todo</button>
+    <p v-if="!todoData">Loading...</p>
+    <pre v-else>{{ todoData }}</pre>
+    <br />
+    <br />
+    <ChildComp :msg="greeting" @response="emitLog">This is some slot !</ChildComp>
   </div>
 </template>
 
