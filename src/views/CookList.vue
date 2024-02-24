@@ -17,20 +17,24 @@ const foodLists = reactive([
 ])
 </script>
 <template>
-  <v-simple-table>
-    <template v-slot:default>
-      <thead>
-        <tr>
-          <th class="text-left">Name</th>
-          <th class="text-left">Calories</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in foodLists" :key="item.name">
-          <td>{{ item.name }}</td>
-          <td>{{ item.calories }}</td>
-        </tr>
-      </tbody>
-    </template>
-  </v-simple-table>
+  <v-container>
+    <v-table>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th style="width: 93%">Name</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in foodLists" :key="item.name">
+            <td>{{ item.name }}</td>
+            <td>
+              <v-icon icon="mdi-dots-vertical"></v-icon>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-table>
+  </v-container>
 </template>
