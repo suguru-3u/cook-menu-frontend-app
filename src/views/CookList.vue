@@ -17,20 +17,37 @@ const foodLists = reactive([
 ])
 </script>
 <template>
-  <v-simple-table>
-    <template v-slot:default>
-      <thead>
-        <tr>
-          <th class="text-left">Name</th>
-          <th class="text-left">Calories</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in foodLists" :key="item.name">
-          <td>{{ item.name }}</td>
-          <td>{{ item.calories }}</td>
-        </tr>
-      </tbody>
-    </template>
-  </v-simple-table>
+  <v-container>
+    <v-table>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th style="width: 93%">料理名</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in foodLists" :key="item.name">
+            <td>{{ item.name }}</td>
+            <td>
+              <v-menu>
+                <template v-slot:activator="{ props }">
+                  <v-icon icon="mdi-dots-vertical" v-bind="props"></v-icon>
+                </template>
+                <v-list>
+                  <v-list-item>
+                    <v-list-item-title class="ma-2">編集</v-list-item-title>
+                    <v-list-item-title class="ma-2">削除</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-table>
+    <div class="text-center">
+      <v-pagination circle></v-pagination>
+    </div>
+  </v-container>
 </template>
