@@ -3,25 +3,28 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <v-card>
+  <v-card class="mb-15">
     <v-layout>
       <!-- <v-system-bar color="deep-purple darken-3"></v-system-bar> -->
 
       <v-app-bar color="primary" prominent>
-        <v-toolbar-title>My files</v-toolbar-title>
+        <v-toolbar-title>Cook Menu Management App</v-toolbar-title>
 
         <v-spacer></v-spacer>
 
-        <v-btn variant="text" icon="mdi-magnify"></v-btn>
-
-        <v-btn variant="text" icon="mdi-filter"></v-btn>
-
-        <v-btn variant="text" icon="mdi-dots-vertical"></v-btn>
+        <v-btn>
+          <RouterLink to="/" class="text-white font-weight-black text-decoration-none"
+            >料理一覧</RouterLink
+          >
+        </v-btn>
+        <v-btn>
+          <RouterLink
+            to="/register/cook-menu"
+            class="text-white font-weight-black text-decoration-none"
+            >料理の登録</RouterLink
+          >
+        </v-btn>
       </v-app-bar>
-      <v-main>
-        <RouterLink to="/study">Study</RouterLink>
-        <RouterLink to="/">cookList</RouterLink>
-      </v-main>
     </v-layout>
   </v-card>
   <RouterView />

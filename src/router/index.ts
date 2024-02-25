@@ -10,20 +10,17 @@ const router = createRouter({
       component: CookList
     },
     {
-      path: '/about',
-      name: 'about',
+      path: '/register/cook-menu',
+      name: 'cook-menu',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      component: () => import('../views/RegisterCookMenu.vue')
     },
     {
-      path: '/study',
-      name: 'study',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/StudyView.vue')
+      path: '/*', //設定したurlにいずれもマッチしない場合
+      // redirect: '/', ※redirectオプションは任意で設定
+      component: CookList //NotFoundコンポーネントに遷移
     }
   ]
 })
