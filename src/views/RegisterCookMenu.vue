@@ -1,21 +1,20 @@
 <script setup lang="ts"></script>
 
 <template>
+  <v-stepper alt-labels class="pt-1">
+    <v-stepper-header>
+      <v-stepper-item title="入力" value="1"></v-stepper-item>
+
+      <v-divider></v-divider>
+
+      <v-stepper-item title="確認" value="2"></v-stepper-item>
+
+      <v-divider></v-divider>
+
+      <v-stepper-item title="完了" value="3"></v-stepper-item>
+    </v-stepper-header>
+  </v-stepper>
   <v-container class="pa-10">
-    <v-row align="center" no-gutters style="height: 150px">
-      <v-col>
-        <v-icon icon="mdi-numeric-1-box-outline" size="x-large"></v-icon>
-        <span>入力</span>
-      </v-col>
-      <v-col>
-        <v-icon icon="mdi-numeric-2-box-outline" size="x-large"></v-icon>
-        <span>確認</span>
-      </v-col>
-      <v-col>
-        <v-icon icon="mdi-numeric-3-box-outline" size="x-large"></v-icon>
-        <span>完了</span>
-      </v-col>
-    </v-row>
     <v-form ref="form">
       <v-text-field :counter="10" label="料理名" required></v-text-field>
 

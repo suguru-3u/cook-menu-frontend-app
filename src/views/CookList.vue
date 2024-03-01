@@ -18,7 +18,7 @@ const foodLists = reactive([
 </script>
 <template>
   <v-container>
-    <v-table>
+    <v-table :hover="true">
       <template v-slot:default>
         <thead>
           <tr>
