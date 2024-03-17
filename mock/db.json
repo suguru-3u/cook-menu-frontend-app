@@ -17,12 +17,16 @@
   },
   "users": [
     {
-      "id": 1,
-      "name": "futoase"
+      "name": "そば",
+      "calories": 100
     },
     {
-      "id": 2,
-      "name": "hogehoge"
+      "name": "うどん",
+      "calories": 200
+    },
+    {
+      "name": "そうめん",
+      "calories": 200
     }
   ]
 }

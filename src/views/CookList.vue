@@ -1,53 +1,40 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-
-const foodLists = reactive([
-  {
-    name: 'そば',
-    calories: 100
-  },
-  {
-    name: 'うどん',
-    calories: 200
-  },
-  {
-    name: 'そうめん',
-    calories: 200
-  }
-])
+import CookMenuList from '@/components/CookMenuList.vue'
 </script>
+
 <template>
   <v-container>
-    <v-table :hover="true">
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th style="width: 93%">料理名</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in foodLists" :key="item.name">
-            <td>{{ item.name }}</td>
-            <td>
-              <v-menu>
-                <template v-slot:activator="{ props }">
-                  <v-icon icon="mdi-dots-vertical" v-bind="props"></v-icon>
-                </template>
-                <v-list>
-                  <v-list-item>
-                    <v-list-item-title class="ma-2">編集</v-list-item-title>
-                    <v-list-item-title class="ma-2">削除</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-table>
-    <div class="text-center">
-      <v-pagination circle></v-pagination>
-    </div>
+    <Transition mode="out-in">
+      <Suspense>
+        <template #default>
+          <CookMenuList />
+        </template>
+        <template #fallback>
+          <v-layout justify-center align-center height="1000vh">
+            <v-progress-circular
+              color="primary"
+              indeterminate
+              :size="280"
+              :width="12"
+              class="mx-auto mt-16"
+            >
+              料理レシピを取得しています
+            </v-progress-circular>
+          </v-layout>
+        </template>
+      </Suspense>
+    </Transition>
   </v-container>
 </template>
+
+<style>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 1s ease-in-out;
+}
+
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+}
+</style>
