@@ -1,0 +1,32 @@
+{
+  "user1": {
+    "data": {
+      "last_name": "山田",
+      "first_name": "太郎",
+      "last_name_kana": "ヤマダ",
+      "first_name_kana": "タロウ"
+    }
+  },
+  "user2": {
+    "data": {
+      "last_name": "山田",
+      "first_name": "花太郎",
+      "last_name_kana": "ヤマダ",
+      "first_name_kana": "ハナタロウ"
+    }
+  },
+  "users": [
+    {
+      "name": "そば",
+      "calories": 100
+    },
+    {
+      "name": "うどん",
+      "calories": 200
+    },
+    {
+      "name": "そうめん",
+      "calories": 200
+    }
+  ]
+}

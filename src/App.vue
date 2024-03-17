@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <v-app>
-    <v-app-bar color="primary">
+    <v-app-bar color="indigo">
       <v-toolbar-title>Cook Menu Management App</v-toolbar-title>
 
       <v-spacer></v-spacer>
