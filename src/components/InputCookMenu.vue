@@ -1,5 +1,26 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
+// import { cookMenuRequest } from '@/model/cookMenu'
+type inputCookMenu = {
+  name: string
+  genre?: string
+  weight?: string
+  ingredients: []
+  seasoning: []
+  url: string
+  memo: string
+}
+
+const inputCookMenu2 = ref<inputCookMenu>({
+  name: '',
+  genre: undefined,
+  weight: undefined,
+  ingredients: [],
+  seasoning: [],
+  url: '',
+  memo: ''
+})
+
 // todo:propsの使い方がよくわからない
 // todo:commitの使い方がよくわからない
 const emit = defineEmits(['nextPage'])
@@ -8,7 +29,15 @@ function next() {
   console.log('イベントの発火')
   emit('nextPage', 1)
 }
-const memberList = reactive([{ id: 0, name: '', age: null }])
+
+const ingredients = ref([{ name: '', age: undefined }])
+const seasonings = ref([{ name: '', age: undefined }])
+
+const addIngredient = () => ingredients.value.push({ name: '', age: undefined })
+const reduceIngredient = (index: number) => ingredients.value.splice(index, 1)
+
+const addSeasoning = () => seasonings.value.push({ name: '', age: undefined })
+const reduceSeasoning = (index: number) => seasonings.value.splice(index, 1)
 </script>
 
 <template>
@@ -16,7 +45,12 @@ const memberList = reactive([{ id: 0, name: '', age: null }])
     <v-row justify="center">
       <v-col cols="1"> 料理名 </v-col>
       <v-col cols="7">
-        <v-text-field variant="underlined" :counter="30" required></v-text-field>
+        <v-text-field
+          variant="underlined"
+          :counter="30"
+          v-model="inputCookMenu2.name"
+          required
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row justify="center">
@@ -27,6 +61,7 @@ const memberList = reactive([{ id: 0, name: '', age: null }])
         <v-select
           chips
           variant="underlined"
+          v-model="inputCookMenu2.genre"
           :items="['和食', '中華', '洋食', 'エスニック']"
         ></v-select>
       </v-col>
@@ -39,7 +74,7 @@ const memberList = reactive([{ id: 0, name: '', age: null }])
         <v-select chips variant="underlined" :items="['軽め', '普通', '重め']"></v-select>
       </v-col>
     </v-row>
-    <v-row v-for="member in memberList" :key="member.id" justify="center">
+    <v-row v-for="(member, index) in ingredients" :key="index" justify="center">
       <v-col cols="1">
         <v-subheader>食材</v-subheader>
       </v-col>
@@ -57,8 +92,12 @@ const memberList = reactive([{ id: 0, name: '', age: null }])
       </v-col>
 
       <v-col cols="2">
-        <v-btn icon="mdi-plus"></v-btn>
-        <v-btn icon="mdi-minus"></v-btn>
+        <v-btn @click="addIngredient" icon="mdi-plus"></v-btn>
+        <v-btn
+          v-if="ingredients.length > 1"
+          @click="reduceIngredient(index)"
+          icon="mdi-minus"
+        ></v-btn>
         <!-- <v-btn dark small color="grey" class="ma-2" @click="addInput(member.id)">
                 <v-icon dark>mdi-plus</v-icon>
               </v-btn>
@@ -67,7 +106,7 @@ const memberList = reactive([{ id: 0, name: '', age: null }])
               </v-btn> -->
       </v-col>
     </v-row>
-    <v-row v-for="member in memberList" :key="member.id" justify="center">
+    <v-row v-for="(member, index) in seasonings" :key="index" justify="center">
       <v-col cols="1">
         <v-subheader>調味料</v-subheader>
       </v-col>
@@ -96,8 +135,12 @@ const memberList = reactive([{ id: 0, name: '', age: null }])
       </v-col>
 
       <v-col cols="2">
-        <v-btn icon="mdi-plus"></v-btn>
-        <v-btn icon="mdi-minus"></v-btn>
+        <v-btn @click="addSeasoning" icon="mdi-plus"></v-btn>
+        <v-btn
+          v-if="seasonings.length > 1"
+          @click="reduceSeasoning(index)"
+          icon="mdi-minus"
+        ></v-btn>
         <!-- <v-btn dark small color="grey" class="ma-2" @click="addInput(member.id)">
                 <v-icon dark>mdi-plus</v-icon>
               </v-btn>
