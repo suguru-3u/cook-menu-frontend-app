@@ -62,7 +62,7 @@ const onAfterLeave = () => {
 const registerCookMenuAction = async () => {
   console.log('献立メニューの送信を実施')
   const requestData: cookMenuRequest = {
-    name: 'test',
+    name: 'ところてん',
     genre: 1,
     weight: 1,
     ingredients: [

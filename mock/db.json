@@ -17,16 +17,81 @@
   },
   "users": [
     {
+      "name": "カツ丼",
+      "genre": 1,
+      "weight": 1,
+      "ingredients": [
+        {
+          "name": "テスト",
+          "count": 2
+        }
+      ],
+      "seasoning": [
+        {
+          "name": "テスト",
+          "count": 2
+        }
+      ],
+      "url": "********.com",
+      "memo": "テスト"
+    },
+    {
       "name": "そば",
-      "calories": 100
+      "genre": 1,
+      "weight": 1,
+      "ingredients": [
+        {
+          "name": "テスト",
+          "count": 2
+        }
+      ],
+      "seasoning": [
+        {
+          "name": "テスト",
+          "count": 2
+        }
+      ],
+      "url": "********.com",
+      "memo": "テスト"
     },
     {
-      "name": "うどん",
-      "calories": 200
+      "id": 3,
+      "name": "test",
+      "genre": 1,
+      "weight": 1,
+      "ingredients": [
+        {
+          "name": "テスト",
+          "count": 2
+        }
+      ],
+      "seasoning": [
+        {
+          "name": "テスト",
+          "count": 2
+        }
+      ],
+      "url": "********.com",
+      "memo": "テスト"
     },
     {
-      "name": "そうめん",
-      "calories": 200
+      "name": "ところてん",
+      "genre": 1,
+      "weight": 1,
+      "ingredients": [
+        {
+          "name": "テスト",
+          "count": 2
+        }
+      ],
+      "seasoning": [
+        {
+          "name": "テスト",
+          "count": 2
+        }
+      ],
+      "url": "********.com",
+      "memo": "テスト"
     }
   ]
 }
