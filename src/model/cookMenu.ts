@@ -17,3 +17,15 @@ export type cookMenuRequest = {
   url?: string
   memo?: string
 }
+
+type food = { name: ''; age: undefined }
+
+export type inputCookMenu = {
+  name: string
+  genre?: string
+  weight?: string
+  ingredients: food[]
+  seasonings: food[]
+  url: string
+  memo: string
+}

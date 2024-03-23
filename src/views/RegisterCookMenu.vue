@@ -2,7 +2,7 @@
   <RegisterStepperHeaderComponent :register-step-number="registerCookMenuStep" />
   <v-container class="pa-10">
     <template v-if="registerCookMenuStep === 1">
-      <InputCookMenu @nextPage="updatePage" />
+      <InputCookMenu @nextPage="updatePage" @inputFoodMenu="changeInputfoodMenu" />
     </template>
     <template v-if="registerCookMenuStep === 2 && !a">
       <ConfirmInputCookMenu @nextPage="updatePage2" @backPage="updatePage" />
@@ -37,13 +37,25 @@ import ConfirmInputCookMenu from '@/components/ConfirmInputCookMenu.vue'
 import CompleteRegisterCookMenu from '@/components/CompleteRegisterCookMenu.vue'
 import { registerCookMenu } from '../api/foodMenu'
 import { type cookMenuRequest } from '../model/cookMenu'
+import { type inputCookMenu } from '@/model/cookMenu'
+
+const inputCookMenu2 = ref<inputCookMenu>({
+  name: '',
+  genre: undefined,
+  weight: undefined,
+  ingredients: [{ name: '', age: undefined }],
+  seasonings: [{ name: '', age: undefined }],
+  url: '',
+  memo: ''
+})
 
 const registerCookMenuStep = ref(1)
 const a = ref(false)
 
-const updatePage = (count: number) => {
-  console.log('イベントを検知')
-  console.log(typeof count)
+const updatePage = (count: number, inputCookMenu3: inputCookMenu) => {
+  console.log('登録確認内容ページへ遷移')
+  inputCookMenu2.value = { ...inputCookMenu3 }
+  console.log('登録内容の表示', inputCookMenu2)
   registerCookMenuStep.value = registerCookMenuStep.value + count
 }
 
@@ -81,6 +93,10 @@ const registerCookMenuAction = async () => {
     memo: 'テスト'
   }
   await registerCookMenu(requestData)
+}
+
+const changeInputfoodMenu = () => {
+  console.log('イベント受信')
 }
 </script>
 
