@@ -5,7 +5,11 @@
       <InputCookMenu @nextPage="updatePage" @inputFoodMenu="changeInputfoodMenu" />
     </template>
     <template v-if="registerCookMenuStep === 2 && !a">
-      <ConfirmInputCookMenu @nextPage="updatePage2" @backPage="updatePage" />
+      <ConfirmInputCookMenu
+        @nextPage="updatePage2"
+        @backPage="updatePage"
+        :confirm-input-cook-menu="inputCookMenu2"
+      />
     </template>
     <Transition @after-leave="onAfterLeave">
       <template v-if="registerCookMenuStep === 2 && a">
