@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import { type inputCookMenu } from '@/model/cookMenu'
-import { ref, computed, type PropType } from 'vue'
+import { ref, computed, watch, toRefs, type PropType } from 'vue'
 
 const props = defineProps({
   confirmInputCookMenu: {
@@ -65,18 +65,41 @@ const props = defineProps({
 })
 const inputCookMenu2 = ref(props.confirmInputCookMenu)
 
-console.log('propsの確認', inputCookMenu2)
-console.log('propsの確認', inputCookMenu2.value)
-console.log('propsの確認', props.confirmInputCookMenu)
+const { confirmInputCookMenu } = toRefs(props)
+
+watch(
+  confirmInputCookMenu,
+  (newValue, oldValue) => {
+    console.log('new:', newValue)
+    console.log('old:', oldValue)
+    inputCookMenu2.value = newValue
+    console.log('値の変更を検知')
+  },
+  { deep: true }
+)
 
 const emit = defineEmits(['nextPage', 'backPage'])
 
-const cookIngredients = computed(() => {
-  let confirmInputIngredients: string = ''
-  props.confirmInputCookMenu?.ingredients.forEach((ingredient) => {
-    confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
-  })
-  return confirmInputIngredients
+console.log('ConfirmInput: props: ', props.confirmInputCookMenu)
+
+const cookIngredients = computed({
+  set: () => {
+    let confirmInputIngredients: string = ''
+    props.confirmInputCookMenu?.ingredients.forEach((ingredient) => {
+      console.log('表示内容の確認: ingredient :', ingredient)
+      confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
+    })
+    return confirmInputIngredients
+  },
+  get: () => {
+    let confirmInputIngredients: string = ''
+    props.confirmInputCookMenu?.ingredients.forEach((ingredient) => {
+      console.log('表示内容の確認: ingredient :', ingredient)
+      confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
+    })
+    return confirmInputIngredients
+    // return props.confirmInputCookMenu?.ingredients
+  }
 })
 
 function next() {

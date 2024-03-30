@@ -58,7 +58,9 @@ const a = ref(false)
 
 const updatePage = (count: number, inputCookMenu3: inputCookMenu) => {
   console.log('登録確認内容ページへ遷移')
-  inputCookMenu2.value = { ...inputCookMenu3 }
+  console.log('inputページからの内容', inputCookMenu3)
+  Object.assign(inputCookMenu2, inputCookMenu3)
+  // inputCookMenu2.value = structuredClone(inputCookMenu3)
   console.log('登録内容の表示', inputCookMenu2)
   registerCookMenuStep.value = registerCookMenuStep.value + count
 }
@@ -78,23 +80,13 @@ const onAfterLeave = () => {
 const registerCookMenuAction = async () => {
   console.log('献立メニューの送信を実施')
   const requestData: cookMenuRequest = {
-    name: 'ところてん',
-    genre: 1,
-    weight: 1,
-    ingredients: [
-      {
-        name: 'テスト',
-        count: 2
-      }
-    ],
-    seasoning: [
-      {
-        name: 'テスト',
-        count: 2
-      }
-    ],
-    url: '********.com',
-    memo: 'テスト'
+    name: inputCookMenu2.value.name,
+    genre: inputCookMenu2.value.genre,
+    weight: inputCookMenu2.value.weight,
+    ingredients: inputCookMenu2.value.ingredients,
+    seasoning: inputCookMenu2.value.seasonings,
+    url: inputCookMenu2.value.url,
+    memo: inputCookMenu2.value.memo
   }
   await registerCookMenu(requestData)
 }
