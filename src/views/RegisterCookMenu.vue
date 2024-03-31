@@ -40,7 +40,7 @@ import InputCookMenu from '@/components/InputCookMenu.vue'
 import ConfirmInputCookMenu from '@/components/ConfirmInputCookMenu.vue'
 import CompleteRegisterCookMenu from '@/components/CompleteRegisterCookMenu.vue'
 import { registerCookMenu } from '../api/foodMenu'
-import { type cookMenuRequest } from '../model/cookMenu'
+import { createRegisterReq } from '../util/cookMenuApiReq'
 import { type inputCookMenu } from '@/model/cookMenu'
 
 const inputCookMenu2 = ref<inputCookMenu>({
@@ -79,16 +79,8 @@ const onAfterLeave = () => {
 
 const registerCookMenuAction = async () => {
   console.log('献立メニューの送信を実施')
-  const requestData: cookMenuRequest = {
-    name: inputCookMenu2.value.name,
-    genre: inputCookMenu2.value.genre,
-    weight: inputCookMenu2.value.weight,
-    ingredients: inputCookMenu2.value.ingredients,
-    seasoning: inputCookMenu2.value.seasonings,
-    url: inputCookMenu2.value.url,
-    memo: inputCookMenu2.value.memo
-  }
-  await registerCookMenu(requestData)
+  const reqInputCookMenu = createRegisterReq(inputCookMenu2.value)
+  await registerCookMenu(reqInputCookMenu)
 }
 
 const changeInputfoodMenu = () => {

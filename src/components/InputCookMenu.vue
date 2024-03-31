@@ -51,12 +51,12 @@
 
       <v-col cols="2">
         <v-btn
-          v-if="inputCookMenu2.ingredients.length === index + 1"
+          v-if="inputCookMenu2.ingredients!.length === index + 1"
           @click="addIngredient"
           icon="mdi-plus"
         ></v-btn>
         <v-btn
-          v-if="inputCookMenu2.ingredients.length > 1"
+          v-if="inputCookMenu2.ingredients!.length > 1"
           @click="reduceIngredient(index)"
           icon="mdi-minus"
         ></v-btn>
@@ -92,12 +92,12 @@
 
       <v-col cols="2">
         <v-btn
-          v-if="inputCookMenu2.seasonings.length === index + 1"
+          v-if="inputCookMenu2.seasonings!.length === index + 1"
           @click="addSeasoning"
           icon="mdi-plus"
         ></v-btn>
         <v-btn
-          v-if="inputCookMenu2.seasonings.length > 1"
+          v-if="inputCookMenu2.seasonings!.length > 1"
           @click="reduceSeasoning(index)"
           icon="mdi-minus"
         ></v-btn>
@@ -162,9 +162,9 @@ function next() {
   emit('nextPage', 1, inputCookMenu2)
 }
 
-const addIngredient = () => inputCookMenu2.value.ingredients.push({ name: '', age: undefined })
-const reduceIngredient = (index: number) => inputCookMenu2.value.ingredients.splice(index, 1)
+const addIngredient = () => inputCookMenu2.value.ingredients!.push({ name: '', age: undefined })
+const reduceIngredient = (index: number) => inputCookMenu2.value.ingredients!.splice(index, 1)
 
-const addSeasoning = () => inputCookMenu2.value.seasonings.push({ name: '', age: undefined })
-const reduceSeasoning = (index: number) => inputCookMenu2.value.seasonings.splice(index, 1)
+const addSeasoning = () => inputCookMenu2.value.seasonings!.push({ name: '', age: undefined })
+const reduceSeasoning = (index: number) => inputCookMenu2.value.seasonings!.splice(index, 1)
 </script>
