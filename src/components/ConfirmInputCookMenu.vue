@@ -85,7 +85,7 @@ console.log('ConfirmInput: props: ', props.confirmInputCookMenu)
 const cookIngredients = computed({
   set: () => {
     let confirmInputIngredients: string = ''
-    props.confirmInputCookMenu?.ingredients.forEach((ingredient) => {
+    props.confirmInputCookMenu?.ingredients?.forEach((ingredient) => {
       console.log('表示内容の確認: ingredient :', ingredient)
       confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
     })
@@ -93,7 +93,7 @@ const cookIngredients = computed({
   },
   get: () => {
     let confirmInputIngredients: string = ''
-    props.confirmInputCookMenu?.ingredients.forEach((ingredient) => {
+    props.confirmInputCookMenu?.ingredients?.forEach((ingredient) => {
       console.log('表示内容の確認: ingredient :', ingredient)
       confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
     })
