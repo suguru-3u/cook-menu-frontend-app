@@ -58,10 +58,7 @@ const a = ref(false)
 
 const updatePage = (count: number, inputCookMenu3: inputCookMenu) => {
   console.log('登録確認内容ページへ遷移')
-  console.log('inputページからの内容', inputCookMenu3)
   Object.assign(inputCookMenu2, inputCookMenu3)
-  // inputCookMenu2.value = structuredClone(inputCookMenu3)
-  console.log('登録内容の表示', inputCookMenu2)
   registerCookMenuStep.value = registerCookMenuStep.value + count
 }
 

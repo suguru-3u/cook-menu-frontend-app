@@ -63,44 +63,61 @@ const props = defineProps({
     required: true
   }
 })
-const inputCookMenu2 = ref(props.confirmInputCookMenu)
 
-const { confirmInputCookMenu } = toRefs(props)
-
-watch(
-  confirmInputCookMenu,
-  (newValue, oldValue) => {
-    console.log('new:', newValue)
-    console.log('old:', oldValue)
-    inputCookMenu2.value = newValue
-    console.log('値の変更を検知')
-  },
-  { deep: true }
-)
-
+/**
+ * watchの引数はリアクティブなオブジェクトである必要があるため、props.msgでは宣言することができない
+ * またリアクティブなオブジェクトであるpropsをwatchに指定すると、propsのいずれかの値が変化した場合に毎回呼び出されてしまう。
+ * toRefsを使用すればpropsの特定の値が変更された場合にのみ変更を検知して処理を実行することができる
+ */
+// const { confirmInputCookMenu } = toRefs(props)
+// watch(
+//   confirmInputCookMenu,
+//   (newValue, oldValue) => {
+//     console.log('値の変更を検知')
+//     let confirmInputIngredients: string = ''
+//     confirmInputCookMenu.value?.ingredients?.forEach((ingredient) => {
+//       confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
+//     })
+//     cookIngredients.value = confirmInputIngredients
+//   },
+//   { deep: true }
+// )
 const emit = defineEmits(['nextPage', 'backPage'])
 
-console.log('ConfirmInput: props: ', props.confirmInputCookMenu)
-
-const cookIngredients = computed({
-  set: () => {
-    let confirmInputIngredients: string = ''
-    props.confirmInputCookMenu?.ingredients?.forEach((ingredient) => {
-      console.log('表示内容の確認: ingredient :', ingredient)
-      confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
-    })
-    return confirmInputIngredients
-  },
-  get: () => {
-    let confirmInputIngredients: string = ''
-    props.confirmInputCookMenu?.ingredients?.forEach((ingredient) => {
-      console.log('表示内容の確認: ingredient :', ingredient)
-      confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
-    })
-    return confirmInputIngredients
-    // return props.confirmInputCookMenu?.ingredients
-  }
+const cookIngredients = computed(() => {
+  let confirmInputIngredients: string = ''
+  props.confirmInputCookMenu?.ingredients?.forEach((ingredient) => {
+    confirmInputIngredients += ingredient.name
+      ? ingredient.name + ' : ' + ingredient.age + '\n'
+      : ''
+  })
+  return confirmInputIngredients
 })
+// set: () => {
+//   let confirmInputIngredients: string = ''
+//   props.confirmInputCookMenu?.ingredients?.forEach((ingredient) => {
+//     console.log('setter:表示内容の確認: ingredient :', ingredient)
+//     confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
+//   })
+//   return confirmInputIngredients
+// },
+// get: () => {
+// let confirmInputIngredients: string = ''
+// if (
+//   props.confirmInputCookMenu?.ingredients &&
+//   props.confirmInputCookMenu?.ingredients?.length > 0
+// ) {
+//   props.confirmInputCookMenu?.ingredients?.forEach((ingredient) => {
+//     console.log('getter:表示内容の確認: ingredient :', ingredient)
+//     confirmInputIngredients += ingredient.name + ' : ' + ingredient.age + '\n'
+//   })
+//   return confirmInputIngredients
+// }
+// return ''
+// return props.confirmInputCookMenu?.ingredients
+// }
+// }
+// )
 
 function next() {
   console.log('イベントの発火')
