@@ -18,6 +18,7 @@
                 </template>
                 <v-list>
                   <v-list-item>
+                    <!-- 編集機能の実装予定 -->
                     <v-list-item-title class="ma-2">編集</v-list-item-title>
                     <v-list-item-title class="ma-2">削除</v-list-item-title>
                   </v-list-item>
