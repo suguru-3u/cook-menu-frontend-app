@@ -2,10 +2,14 @@
   <RegisterStepperHeaderComponent :register-step-number="registerCookMenuStep" />
   <v-container class="pa-10">
     <template v-if="registerCookMenuStep === 1">
-      <InputCookMenu @nextPage="updatePage" />
+      <InputCookMenu @nextPage="updatePage" @inputFoodMenu="changeInputfoodMenu" />
     </template>
     <template v-if="registerCookMenuStep === 2 && !a">
-      <ConfirmInputCookMenu @nextPage="updatePage2" @backPage="updatePage" />
+      <ConfirmInputCookMenu
+        @nextPage="updatePage2"
+        @backPage="updatePage"
+        :confirm-input-cook-menu="inputCookMenu2"
+      />
     </template>
     <Transition @after-leave="onAfterLeave">
       <template v-if="registerCookMenuStep === 2 && a">
@@ -36,14 +40,25 @@ import InputCookMenu from '@/components/InputCookMenu.vue'
 import ConfirmInputCookMenu from '@/components/ConfirmInputCookMenu.vue'
 import CompleteRegisterCookMenu from '@/components/CompleteRegisterCookMenu.vue'
 import { registerCookMenu } from '../api/foodMenu'
-import { type cookMenuRequest } from '../model/cookMenu'
+import { createRegisterReq } from '../util/cookMenuApiReq'
+import { type inputCookMenu } from '@/model/cookMenu'
+
+const inputCookMenu2 = ref<inputCookMenu>({
+  name: '',
+  genre: undefined,
+  weight: undefined,
+  ingredients: [{ name: '', age: undefined }],
+  seasonings: [{ name: '', age: undefined }],
+  url: '',
+  memo: ''
+})
 
 const registerCookMenuStep = ref(1)
 const a = ref(false)
 
-const updatePage = (count: number) => {
-  console.log('イベントを検知')
-  console.log(typeof count)
+const updatePage = (count: number, inputCookMenu3: inputCookMenu) => {
+  console.log('登録確認内容ページへ遷移')
+  Object.assign(inputCookMenu2, inputCookMenu3)
   registerCookMenuStep.value = registerCookMenuStep.value + count
 }
 
@@ -61,26 +76,12 @@ const onAfterLeave = () => {
 
 const registerCookMenuAction = async () => {
   console.log('献立メニューの送信を実施')
-  const requestData: cookMenuRequest = {
-    name: 'test',
-    genre: 1,
-    weight: 1,
-    ingredients: [
-      {
-        name: 'テスト',
-        count: 2
-      }
-    ],
-    seasoning: [
-      {
-        name: 'テスト',
-        count: 2
-      }
-    ],
-    url: '********.com',
-    memo: 'テスト'
-  }
-  await registerCookMenu(requestData)
+  const reqInputCookMenu = createRegisterReq(inputCookMenu2.value)
+  await registerCookMenu(reqInputCookMenu)
+}
+
+const changeInputfoodMenu = () => {
+  console.log('イベント受信')
 }
 </script>
 

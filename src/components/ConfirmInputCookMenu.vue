@@ -9,31 +9,31 @@
     <tbody>
       <tr>
         <td>料理名</td>
-        <td>カツ丼</td>
+        <td>{{ props.confirmInputCookMenu.name }}</td>
       </tr>
       <tr>
         <td>ジャンル</td>
-        <td>和食</td>
+        <td>{{ props.confirmInputCookMenu.genre }}</td>
       </tr>
       <tr>
         <td>重さ</td>
-        <td>重め</td>
+        <td>{{ props.confirmInputCookMenu.weight }}</td>
       </tr>
       <tr>
         <td>食材</td>
-        <td>カツ</td>
+        <td style="white-space: pre-wrap" v-text="cookIngredients"></td>
       </tr>
       <tr>
         <td>調味料</td>
-        <td>和風だし</td>
+        <td style="white-space: pre-wrap" v-text="cookSeasonings"></td>
       </tr>
       <tr>
         <td>URL</td>
-        <td>https://google.com</td>
+        <td>{{ props.confirmInputCookMenu.url }}</td>
       </tr>
       <tr>
         <td>メモ</td>
-        <td>カツ丼はたまに無性に食べたくなる</td>
+        <td>{{ props.confirmInputCookMenu.memo }}</td>
       </tr>
     </tbody>
   </v-table>
@@ -54,7 +54,30 @@
 </template>
 
 <script setup lang="ts">
+import { type inputCookMenu } from '@/model/cookMenu'
+import { computed, type PropType } from 'vue'
+
 const emit = defineEmits(['nextPage', 'backPage'])
+const props = defineProps({
+  confirmInputCookMenu: {
+    type: Object as PropType<inputCookMenu>,
+    required: true
+  }
+})
+
+const cookIngredients = computed(() => {
+  return props.confirmInputCookMenu?.ingredients
+    ?.filter((ingredient) => ingredient.name)
+    .map((ingredient) => `${ingredient.name} : ${ingredient.age}\n`)
+    .join('')
+})
+
+const cookSeasonings = computed(() => {
+  return props.confirmInputCookMenu?.seasonings
+    ?.filter((seasoning) => seasoning.name)
+    .map((seasoning) => `${seasoning.name} : ${seasoning.age}\n`)
+    .join('')
+})
 
 function next() {
   console.log('イベントの発火')

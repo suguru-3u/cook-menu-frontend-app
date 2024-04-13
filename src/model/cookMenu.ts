@@ -1,19 +1,23 @@
+export type food = { name: ''; age: undefined }
+
+export type reqFood = { name: string; count: number }
+
 export type cookMenuRequest = {
   name: string
-  genre: 1 | 2 | 3 | 4
-  weight: 1 | 2 | 3
-  ingredients: [
-    {
-      name: string
-      count: number
-    }
-  ]
-  seasoning: [
-    {
-      name: string
-      count: number
-    }
-  ]
+  genre?: number
+  weight?: number
+  ingredients?: reqFood[]
+  seasoning?: reqFood[]
+  url?: string
+  memo?: string
+}
+
+export type inputCookMenu = {
+  name: string
+  genre?: string
+  weight?: string
+  ingredients?: food[]
+  seasonings?: food[]
   url: string
   memo: string
 }
