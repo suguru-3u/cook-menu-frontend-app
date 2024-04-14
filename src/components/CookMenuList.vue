@@ -19,7 +19,11 @@
                 <v-list>
                   <v-list-item>
                     <!-- 編集機能の実装予定 -->
-                    <v-list-item-title class="ma-2">編集</v-list-item-title>
+                    <v-list-item-title class="ma-2"
+                      ><router-link :to="{ name: 'edit-cook-menu', params: { id: item.id } }"
+                        >編集</router-link
+                      ></v-list-item-title
+                    >
                     <v-list-item-title class="ma-2">削除</v-list-item-title>
                   </v-list-item>
                 </v-list>

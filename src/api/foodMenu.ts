@@ -3,7 +3,7 @@
  */
 
 import axios from 'axios'
-import { type cookMenuRequest } from '../model/cookMenu'
+import { type cookMenuRequest, type editCookMenu } from '../model/cookMenu'
 
 const apiBaseURL = import.meta.env.VITE_API_BASE_URL
 const timeout = 5000
@@ -38,4 +38,15 @@ const registerCookMenu = async (params: cookMenuRequest) => {
   }
 }
 
-export { foodMenuLists, registerCookMenu }
+const getCookMenu = async (id: string): Promise<editCookMenu> => {
+  try {
+    const url = '/api/cook-menu/' + id
+    const responce = await axios.get(url, { baseURL: apiBaseURL, timeout: timeout })
+    return responce.data
+  } catch (e: any) {
+    console.log('エラー発生', e)
+    return e
+  }
+}
+
+export { foodMenuLists, registerCookMenu, getCookMenu }
