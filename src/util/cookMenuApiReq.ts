@@ -2,7 +2,7 @@ import { type inputCookMenu, type food, type cookMenuRequest, type reqFood } fro
 
 export function createRegisterReq(inputCookMenu: inputCookMenu) {
   const reqGenre = conversionGenre(inputCookMenu.genre)
-  const reqWeight = conversionGenre(inputCookMenu.weight)
+  const reqWeight = conversionWeight(inputCookMenu.weight)
   const reqIngredients = conversionReqIngredients(inputCookMenu.ingredients!)
   const reqSeasonings = conversionReqseasoning(inputCookMenu.seasonings!)
 
@@ -88,5 +88,6 @@ function conversionReqseasoning(seasonings: food[]): reqFood[] {
 }
 
 function checkArrayCount(array: food[]) {
-  return array.length < 0
+  console.log('データの確認', array)
+  return array.length > 0 && array[0].name.length !== 1
 }

@@ -18,12 +18,9 @@
                 </template>
                 <v-list>
                   <v-list-item>
-                    <!-- 編集機能の実装予定 -->
-                    <v-list-item-title class="ma-2"
-                      ><router-link :to="{ name: 'edit-cook-menu', params: { id: item.id } }"
-                        >編集</router-link
-                      ></v-list-item-title
-                    >
+                    <v-list-item-title class="ma-2">編集</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="opeanDelModal(item.name)">
                     <v-list-item-title class="ma-2">削除</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -36,6 +33,13 @@
     <div class="text-center">
       <v-pagination circle></v-pagination>
     </div>
+    <template
+      ><DelCookMenuModal
+        :del-modal-flg="delModalFlg"
+        :cook-menu-name="delCookMenuName"
+        @delCookMenu="delCookMenu"
+        @closeDelModal="closeDelModal"
+    /></template>
   </template>
   <template v-else>
     <h1 class="mt-10">登録している料理メニューはございません</h1>
@@ -43,12 +47,31 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { ref } from 'vue'
+import DelCookMenuModal from './DelCookMenuModal.vue'
 import { foodMenuLists } from '../api/foodMenu'
 
-const foodListsDatas = await foodMenuLists()
+const delModalFlg = ref(false)
+const delCookMenuName = ref('')
 
-console.log('取得したデータの確認', foodListsDatas)
+const opeanDelModal = (name: string) => {
+  console.log('処理の発火')
+  delModalFlg.value = true
+  delCookMenuName.value = name
+}
 
-const foodLists = reactive(foodListsDatas)
+const delCookMenu = () => {
+  delModalFlg.value = false
+}
+
+const closeDelModal = () => {
+  delModalFlg.value = false
+}
+
+async function getCookMenuLists() {
+  return await foodMenuLists()
+}
+
+const foodLists = ref(await getCookMenuLists())
+const dialog = ref(true)
 </script>

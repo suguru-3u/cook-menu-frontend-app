@@ -114,6 +114,18 @@
       ],
       "url": "********.com",
       "memo": "テスト"
+    },
+    {
+      "name": "a",
+      "ingredients": [],
+      "seasoning": [
+        {
+          "name": "a",
+          "count": 0
+        }
+      ],
+      "url": "",
+      "memo": ""
     }
   ]
 }

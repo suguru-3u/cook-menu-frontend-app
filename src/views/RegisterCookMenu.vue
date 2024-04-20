@@ -1,36 +1,4 @@
-<template>
-  <RegisterStepperHeaderComponent :register-step-number="registerCookMenuStep" />
-  <v-container class="pa-10">
-    <template v-if="registerCookMenuStep === 1">
-      <InputCookMenu @nextPage="updatePage" @inputFoodMenu="changeInputfoodMenu" />
-    </template>
-    <template v-if="registerCookMenuStep === 2 && !a">
-      <ConfirmInputCookMenu
-        @nextPage="updatePage2"
-        @backPage="updatePage"
-        :confirm-input-cook-menu="inputCookMenu2"
-      />
-    </template>
-    <Transition @after-leave="onAfterLeave">
-      <template v-if="registerCookMenuStep === 2 && a">
-        <v-layout justify-center align-center height="1000vh">
-          <v-progress-circular
-            color="primary"
-            indeterminate
-            :size="280"
-            :width="12"
-            class="mx-auto mt-16"
-          >
-            料理レシピを登録しています
-          </v-progress-circular>
-        </v-layout>
-      </template>
-    </Transition>
-    <template v-if="registerCookMenuStep === 3 && !a">
-      <CompleteRegisterCookMenu />
-    </template>
-  </v-container>
-</template>
+RegisterCookMenu.vue
 
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -47,8 +15,8 @@ const inputCookMenu2 = ref<inputCookMenu>({
   name: '',
   genre: undefined,
   weight: undefined,
-  ingredients: [{ name: '', age: undefined }],
-  seasonings: [{ name: '', age: undefined }],
+  ingredients: [{ name: '', age: null }],
+  seasonings: [{ name: '', age: null }],
   url: '',
   memo: ''
 })
@@ -56,18 +24,22 @@ const inputCookMenu2 = ref<inputCookMenu>({
 const registerCookMenuStep = ref(1)
 const a = ref(false)
 
-const updatePage = (count: number, inputCookMenu3: inputCookMenu) => {
-  console.log('登録確認内容ページへ遷移')
+const confirmInputPage = (inputCookMenu3: inputCookMenu) => {
+  const confirmInputStepNum = 2
   Object.assign(inputCookMenu2, inputCookMenu3)
-  registerCookMenuStep.value = registerCookMenuStep.value + count
+  registerCookMenuStep.value = confirmInputStepNum
 }
 
-const updatePage2 = async (count: number) => {
-  console.log('イベントを検知')
-  console.log(typeof count)
+const backPage = () => {
+  const backStepNum = -1
+  registerCookMenuStep.value = registerCookMenuStep.value + backStepNum
+}
+
+const completeRegisterPage = async () => {
+  const completeRegisterStepNum = 3
   a.value = true
   await registerCookMenuAction()
-  registerCookMenuStep.value = registerCookMenuStep.value + count
+  registerCookMenuStep.value = completeRegisterStepNum
 }
 
 const onAfterLeave = () => {
@@ -96,3 +68,37 @@ const changeInputfoodMenu = () => {
   opacity: 0;
 }
 </style>
+
+<template>
+  <RegisterStepperHeaderComponent :register-step-number="registerCookMenuStep" />
+  <v-container class="pa-10">
+    <template v-if="registerCookMenuStep === 1">
+      <InputCookMenu @nextPage="confirmInputPage" :input-Cook-Menu-Data="inputCookMenu2" />
+    </template>
+    <template v-if="registerCookMenuStep === 2 && !a">
+      <ConfirmInputCookMenu
+        @nextPage="completeRegisterPage"
+        @backPage="backPage"
+        :confirm-input-cook-menu="inputCookMenu2"
+      />
+    </template>
+    <Transition @after-leave="onAfterLeave">
+      <template v-if="registerCookMenuStep === 2 && a">
+        <v-layout justify-center align-center height="1000vh">
+          <v-progress-circular
+            color="primary"
+            indeterminate
+            :size="280"
+            :width="12"
+            class="mx-auto mt-16"
+          >
+            料理レシピを登録しています
+          </v-progress-circular>
+        </v-layout>
+      </template>
+    </Transition>
+    <template v-if="registerCookMenuStep === 3 && !a">
+      <CompleteRegisterCookMenu />
+    </template>
+  </v-container>
+</template>
