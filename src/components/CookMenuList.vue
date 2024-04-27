@@ -17,10 +17,10 @@
                   <v-icon icon="mdi-dots-vertical" v-bind="props"></v-icon>
                 </template>
                 <v-list>
-                  <v-list-item>
+                  <v-list-item @click="editCookMenu(item)">
                     <v-list-item-title class="ma-2">編集</v-list-item-title>
                   </v-list-item>
-                  <v-list-item @click="opeanDelModal(item.name)">
+                  <v-list-item @click="opeanDelModal(item)">
                     <v-list-item-title class="ma-2">削除</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -31,11 +31,12 @@
       </template>
     </v-table>
     <div class="text-center">
-      <v-pagination circle></v-pagination>
+      <v-pagination></v-pagination>
     </div>
     <template
       ><DelCookMenuModal
         :del-modal-flg="delModalFlg"
+        :cook-menu-name-id="delCookMenuNameId"
         :cook-menu-name="delCookMenuName"
         @delCookMenu="delCookMenu"
         @closeDelModal="closeDelModal"
@@ -49,18 +50,27 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import DelCookMenuModal from './DelCookMenuModal.vue'
-import { foodMenuLists } from '../api/foodMenu'
+import { foodMenuLists, deleteCookMenu } from '../api/foodMenu'
+import { useRouter } from 'vue-router'
 
 const delModalFlg = ref(false)
+const delCookMenuNameId = ref('')
 const delCookMenuName = ref('')
+const router = useRouter()
 
-const opeanDelModal = (name: string) => {
-  console.log('処理の発火')
+const opeanDelModal = (foodMenu) => {
   delModalFlg.value = true
-  delCookMenuName.value = name
+  delCookMenuNameId.value = foodMenu.id
+  delCookMenuName.value = foodMenu.name
 }
 
-const delCookMenu = () => {
+const editCookMenu = (cookMenu) => {
+  router.push(`/cook-menu/${cookMenu.id}`)
+}
+
+const delCookMenu = async (id: number) => {
+  const res = await deleteCookMenu(id)
+  console.log('レスポンス結果', res)
   delModalFlg.value = false
 }
 

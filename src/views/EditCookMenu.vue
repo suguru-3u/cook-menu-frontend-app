@@ -1,65 +1,73 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import RegisterStepperHeaderComponent from '@/components/RegisterStepperHeader.vue'
 import InputCookMenu from '@/components/InputCookMenu.vue'
 import ConfirmInputCookMenu from '@/components/ConfirmInputCookMenu.vue'
 import CompleteRegisterCookMenu from '@/components/CompleteRegisterCookMenu.vue'
-import { registerCookMenu, getCookMenu } from '../api/foodMenu'
+import { updateCookMenu, getCookMenu } from '../api/foodMenu'
 import { createRegisterReq } from '../util/cookMenuApiReq'
 import { type inputCookMenu } from '@/model/cookMenu'
 
-const getEditCookMenu = async () => {
-  const route = useRoute()
-  const { id } = route.params
-  if (typeof id === 'string') {
-    const cookMenu = await getCookMenu(id)
-    console.log('取得データの確認', cookMenu)
-  }
-}
-getEditCookMenu()
-
+const route = useRoute()
+const registerCookMenuStep = ref(1)
+const a = ref(false)
 const inputCookMenu2 = ref<inputCookMenu>({
+  id: undefined,
   name: '',
   genre: undefined,
   weight: undefined,
-  ingredients: [{ name: '', age: undefined }],
-  seasonings: [{ name: '', age: undefined }],
+  ingredients: [{ name: '', age: null }],
+  seasonings: [{ name: '', age: null }],
   url: '',
   memo: ''
 })
 
-// const registerCookMenuStep = ref(1)
-// const a = ref(false)
+onMounted(() => {
+  load()
+})
 
-// const updatePage = (count: number, inputCookMenu3: inputCookMenu) => {
-//   console.log('登録確認内容ページへ遷移')
-//   Object.assign(inputCookMenu2, inputCookMenu3)
-//   registerCookMenuStep.value = registerCookMenuStep.value + count
-// }
+const load = async () => {
+  try {
+    const { id } = route.params
+    if (typeof id === 'string') {
+      inputCookMenu2.value = await getCookMenu(id)
+    }
+  } catch (err) {
+    console.log('エラー内容:', err)
+  }
+}
 
-// const updatePage2 = async (count: number) => {
-//   console.log('イベントを検知')
-//   console.log(typeof count)
-//   a.value = true
-//   await registerCookMenuAction()
-//   registerCookMenuStep.value = registerCookMenuStep.value + count
-// }
+const confirmInputPage = (inputCookMenu3: inputCookMenu) => {
+  const confirmInputStepNum = 2
+  Object.assign(inputCookMenu2, inputCookMenu3)
+  registerCookMenuStep.value = confirmInputStepNum
+}
 
-// const onAfterLeave = () => {
-//   a.value = false
-// }
+const backPage = () => {
+  const backStepNum = -1
+  registerCookMenuStep.value = registerCookMenuStep.value + backStepNum
+}
 
-// const registerCookMenuAction = async () => {
-//   console.log('献立メニューの送信を実施')
-//   const reqInputCookMenu = createRegisterReq(inputCookMenu2.value)
-//   await registerCookMenu(reqInputCookMenu)
-// }
+const completeRegisterPage = async () => {
+  const completeRegisterStepNum = 3
+  a.value = true
+  await registerCookMenuAction()
+  registerCookMenuStep.value = completeRegisterStepNum
+}
 
-// const changeInputfoodMenu = () => {
-//   console.log('イベント受信')
-// }
+const onAfterLeave = () => {
+  a.value = false
+}
+
+const registerCookMenuAction = async () => {
+  console.log('献立メニューの送信を実施')
+  const reqInputCookMenu = createRegisterReq(inputCookMenu2.value)
+  console.log('データの確認:inputCookMenu2.value.id', inputCookMenu2.value.id)
+  const res = await updateCookMenu(inputCookMenu2.value.id, reqInputCookMenu)
+  console.log('更新処理結果:res', res)
+}
 </script>
 
 <style>
@@ -75,15 +83,15 @@ const inputCookMenu2 = ref<inputCookMenu>({
 </style>
 
 <template>
-  <!-- <RegisterStepperHeaderComponent :register-step-number="registerCookMenuStep" />
+  <RegisterStepperHeaderComponent :register-step-number="registerCookMenuStep" />
   <v-container class="pa-10">
     <template v-if="registerCookMenuStep === 1">
-      <InputCookMenu @nextPage="updatePage" @inputFoodMenu="changeInputfoodMenu" />
+      <InputCookMenu @nextPage="confirmInputPage" :input-Cook-Menu-Data="inputCookMenu2" />
     </template>
     <template v-if="registerCookMenuStep === 2 && !a">
       <ConfirmInputCookMenu
-        @nextPage="updatePage2"
-        @backPage="updatePage"
+        @nextPage="completeRegisterPage"
+        @backPage="backPage"
         :confirm-input-cook-menu="inputCookMenu2"
       />
     </template>
@@ -105,6 +113,5 @@ const inputCookMenu2 = ref<inputCookMenu>({
     <template v-if="registerCookMenuStep === 3 && !a">
       <CompleteRegisterCookMenu />
     </template>
-  </v-container> -->
-  <h1>Hello</h1>
+  </v-container>
 </template>

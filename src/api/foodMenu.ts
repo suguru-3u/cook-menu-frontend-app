@@ -3,7 +3,11 @@
  */
 
 import axios from 'axios'
-import { type cookMenuRequest, type editCookMenu } from '../model/cookMenu'
+import {
+  type cookMenuRequest,
+  type editCookMenu,
+  type cookMenuUpdateRequest
+} from '../model/cookMenu'
 
 const apiBaseURL = import.meta.env.VITE_API_BASE_URL
 const timeout = 5000
@@ -16,7 +20,7 @@ function wait(ms: number) {
 
 const foodMenuLists = async () => {
   try {
-    const url = 'api/users'
+    const url = 'api/cook-menu?_start=1&_limit=15'
     await wait(1500)
     const responce = await axios.get(url, { baseURL: apiBaseURL, timeout: timeout })
     return responce.data
@@ -28,7 +32,7 @@ const foodMenuLists = async () => {
 
 const registerCookMenu = async (params: cookMenuRequest) => {
   try {
-    const url = 'api/users'
+    const url = 'api/cook-menu'
     await wait(1750)
     const responce = await axios.post(url, params, { baseURL: apiBaseURL, timeout: timeout })
     return responce.status
@@ -49,4 +53,26 @@ const getCookMenu = async (id: string): Promise<editCookMenu> => {
   }
 }
 
-export { foodMenuLists, registerCookMenu, getCookMenu }
+const updateCookMenu = async (id: number, request: cookMenuUpdateRequest) => {
+  try {
+    const url = 'api/cook-menu/' + id
+    const responce = await axios.put(url, request, { baseURL: apiBaseURL, timeout: timeout })
+    return responce.data
+  } catch (e: any) {
+    console.log('エラー発生', e)
+    return e
+  }
+}
+
+const deleteCookMenu = async (id: number) => {
+  try {
+    const url = 'api/cook-menu/' + id
+    const responce = await axios.delete(url, { baseURL: apiBaseURL, timeout: timeout })
+    return responce.data
+  } catch (e: any) {
+    console.log('エラー発生', e)
+    return e
+  }
+}
+
+export { foodMenuLists, registerCookMenu, getCookMenu, updateCookMenu, deleteCookMenu }

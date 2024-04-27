@@ -1,7 +1,7 @@
 InputCookMenu.vue
 
 <script setup lang="ts">
-import { ref, type PropType } from 'vue'
+import { ref, watch, type PropType } from 'vue'
 import { type inputCookMenu } from '@/model/cookMenu'
 
 const props = defineProps({
@@ -10,6 +10,9 @@ const props = defineProps({
     required: true
   }
 })
+console.log('データの処理順番の確認1')
+console.log('データの中身の確認1', props)
+console.log('データの中身の確認2', props.inputCookMenuData)
 
 const inputCookMenu2 = ref<inputCookMenu>({
   name: props.inputCookMenuData.name,
@@ -19,6 +22,11 @@ const inputCookMenu2 = ref<inputCookMenu>({
   seasonings: props.inputCookMenuData.seasonings,
   url: props.inputCookMenuData.url,
   memo: props.inputCookMenuData.memo
+})
+console.log('データの処理順番の確認2')
+
+watch(props, () => {
+  inputCookMenu2.value = props.inputCookMenuData
 })
 
 // todo:propsの使い方がよくわからない

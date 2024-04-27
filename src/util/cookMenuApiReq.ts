@@ -15,6 +15,7 @@ export function createRegisterReq(inputCookMenu: inputCookMenu) {
     url: inputCookMenu.url,
     memo: inputCookMenu.memo
   }
+  console.log('リクエストデータの確認：requestData', requestData)
 
   return requestData
 }
@@ -56,6 +57,7 @@ function conversionReqIngredients(ingredients: food[]): reqFood[] {
   ])
   const resultCheck = checkArrayCount(ingredients)
   if (resultCheck) return []
+  console.log('処理の確認:ingredients', ingredients)
   return ingredients.map((ingredient) => {
     return {
       name: ingredient.name,

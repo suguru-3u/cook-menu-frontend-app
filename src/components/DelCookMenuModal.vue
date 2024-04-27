@@ -6,6 +6,10 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
+  cookMenuNameId: {
+    type: Number,
+    required: true
+  },
   cookMenuName: {
     type: String,
     required: true
@@ -18,7 +22,7 @@ watch(props, () => {
 })
 
 const emit = defineEmits(['delCookMenu', 'closeDelModal'])
-const delCookMenuFn = () => emit('delCookMenu')
+const delCookMenuFn = () => emit('delCookMenu', props.cookMenuNameId)
 const closeDelModalFn = () => emit('closeDelModal')
 </script>
 

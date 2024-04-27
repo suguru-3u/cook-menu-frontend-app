@@ -1,6 +1,5 @@
 {
-  "/api/user/1": "/user1",
-  "/api/user/2": "/user2",
-  "/api/users": "/users",
-  "/api/cook-menu/1": "/cookMenu1"
+  "/api/cook-menu?_start=:start&_limit=:limit": "/users?_start=:start&_limit=:limit",
+  "/api/cook-menu/:id": "/users/:id",
+  "/api/cook-menu": "/users"
 }
