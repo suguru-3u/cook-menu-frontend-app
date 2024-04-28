@@ -18,6 +18,14 @@ const router = createRouter({
       component: () => import('../views/RegisterCookMenu.vue')
     },
     {
+      path: '/cook-menu/:id',
+      name: 'edit-cook-menu',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/EditCookMenu.vue')
+    },
+    {
       path: '/*', //設定したurlにいずれもマッチしない場合
       // redirect: '/', ※redirectオプションは任意で設定
       component: CookList //NotFoundコンポーネントに遷移

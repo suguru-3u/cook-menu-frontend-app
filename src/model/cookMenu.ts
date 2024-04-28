@@ -12,6 +12,8 @@ export type cookMenuRequest = {
   memo?: string
 }
 
+export type cookMenuUpdateRequest = cookMenuRequest & { id: number }
+
 export type inputCookMenu = {
   name: string
   genre?: string
@@ -20,4 +22,15 @@ export type inputCookMenu = {
   seasonings?: food[]
   url: string
   memo: string
+}
+
+export type editCookMenu = {
+  id: number
+  name: string
+  genre?: 0 | 1 | 2 | 3
+  weight?: 0 | 1 | 2 | 3
+  ingredients?: reqFood[]
+  seasonings?: reqFood[]
+  url?: string
+  memo?: string
 }

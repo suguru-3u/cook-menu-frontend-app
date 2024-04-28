@@ -17,9 +17,10 @@
                   <v-icon icon="mdi-dots-vertical" v-bind="props"></v-icon>
                 </template>
                 <v-list>
-                  <v-list-item>
-                    <!-- 編集機能の実装予定 -->
+                  <v-list-item @click="editCookMenu(item)">
                     <v-list-item-title class="ma-2">編集</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="opeanDelModal(item)">
                     <v-list-item-title class="ma-2">削除</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -30,8 +31,16 @@
       </template>
     </v-table>
     <div class="text-center">
-      <v-pagination circle></v-pagination>
+      <v-pagination></v-pagination>
     </div>
+    <template
+      ><DelCookMenuModal
+        :del-modal-flg="delModalFlg"
+        :cook-menu-name-id="delCookMenuNameId"
+        :cook-menu-name="delCookMenuName"
+        @delCookMenu="delCookMenu"
+        @closeDelModal="closeDelModal"
+    /></template>
   </template>
   <template v-else>
     <h1 class="mt-10">登録している料理メニューはございません</h1>
@@ -39,12 +48,40 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { foodMenuLists } from '../api/foodMenu'
+import { ref } from 'vue'
+import DelCookMenuModal from './DelCookMenuModal.vue'
+import { foodMenuLists, deleteCookMenu } from '../api/foodMenu'
+import { useRouter } from 'vue-router'
 
-const foodListsDatas = await foodMenuLists()
+const delModalFlg = ref(false)
+const delCookMenuNameId = ref('')
+const delCookMenuName = ref('')
+const router = useRouter()
 
-console.log('取得したデータの確認', foodListsDatas)
+const opeanDelModal = (foodMenu) => {
+  delModalFlg.value = true
+  delCookMenuNameId.value = foodMenu.id
+  delCookMenuName.value = foodMenu.name
+}
 
-const foodLists = reactive(foodListsDatas)
+const editCookMenu = (cookMenu) => {
+  router.push(`/cook-menu/${cookMenu.id}`)
+}
+
+const delCookMenu = async (id: number) => {
+  const res = await deleteCookMenu(id)
+  console.log('レスポンス結果', res)
+  delModalFlg.value = false
+}
+
+const closeDelModal = () => {
+  delModalFlg.value = false
+}
+
+async function getCookMenuLists() {
+  return await foodMenuLists()
+}
+
+const foodLists = ref(await getCookMenuLists())
+const dialog = ref(true)
 </script>

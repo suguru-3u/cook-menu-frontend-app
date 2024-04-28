@@ -1,17 +1,20 @@
-RegisterCookMenu.vue
-
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 import RegisterStepperHeaderComponent from '@/components/RegisterStepperHeader.vue'
 import InputCookMenu from '@/components/InputCookMenu.vue'
 import ConfirmInputCookMenu from '@/components/ConfirmInputCookMenu.vue'
 import CompleteRegisterCookMenu from '@/components/CompleteRegisterCookMenu.vue'
-import { registerCookMenu } from '../api/foodMenu'
+import { updateCookMenu, getCookMenu } from '../api/foodMenu'
 import { createRegisterReq } from '../util/cookMenuApiReq'
 import { type inputCookMenu } from '@/model/cookMenu'
 
+const route = useRoute()
+const registerCookMenuStep = ref(1)
+const a = ref(false)
 const inputCookMenu2 = ref<inputCookMenu>({
+  id: undefined,
   name: '',
   genre: undefined,
   weight: undefined,
@@ -21,8 +24,20 @@ const inputCookMenu2 = ref<inputCookMenu>({
   memo: ''
 })
 
-const registerCookMenuStep = ref(1)
-const a = ref(false)
+onMounted(() => {
+  load()
+})
+
+const load = async () => {
+  try {
+    const { id } = route.params
+    if (typeof id === 'string') {
+      inputCookMenu2.value = await getCookMenu(id)
+    }
+  } catch (err) {
+    console.log('エラー内容:', err)
+  }
+}
 
 const confirmInputPage = (inputCookMenu3: inputCookMenu) => {
   const confirmInputStepNum = 2
@@ -49,11 +64,9 @@ const onAfterLeave = () => {
 const registerCookMenuAction = async () => {
   console.log('献立メニューの送信を実施')
   const reqInputCookMenu = createRegisterReq(inputCookMenu2.value)
-  await registerCookMenu(reqInputCookMenu)
-}
-
-const changeInputfoodMenu = () => {
-  console.log('イベント受信')
+  console.log('データの確認:inputCookMenu2.value.id', inputCookMenu2.value.id)
+  const res = await updateCookMenu(inputCookMenu2.value.id, reqInputCookMenu)
+  console.log('更新処理結果:res', res)
 }
 </script>
 

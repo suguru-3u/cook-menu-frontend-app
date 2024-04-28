@@ -1,11 +1,117 @@
+InputCookMenu.vue
+
+<script setup lang="ts">
+import { ref, watch, type PropType } from 'vue'
+import { type inputCookMenu } from '@/model/cookMenu'
+
+const props = defineProps({
+  inputCookMenuData: {
+    type: Object as PropType<inputCookMenu>,
+    required: true
+  }
+})
+console.log('データの処理順番の確認1')
+console.log('データの中身の確認1', props)
+console.log('データの中身の確認2', props.inputCookMenuData)
+
+const inputCookMenu2 = ref<inputCookMenu>({
+  name: props.inputCookMenuData.name,
+  genre: props.inputCookMenuData.genre,
+  weight: props.inputCookMenuData.weight,
+  ingredients: props.inputCookMenuData.ingredients,
+  seasonings: props.inputCookMenuData.seasonings,
+  url: props.inputCookMenuData.url,
+  memo: props.inputCookMenuData.memo
+})
+console.log('データの処理順番の確認2')
+
+watch(props, () => {
+  inputCookMenu2.value = props.inputCookMenuData
+})
+
+// todo:propsの使い方がよくわからない
+// todo:commitの使い方がよくわからない
+const emit = defineEmits(['nextPage'])
+
+/**
+ * バリデーション処理
+ */
+const form = ref()
+const valid = ref(null)
+const nameRules = [(v) => !!v || '料理名は必須です']
+const ingredientNameRules = (index: number) => {
+  return (value: string) => {
+    const checkInputAge =
+      inputCookMenu2.value.ingredients[index].age === undefined ||
+      inputCookMenu2.value.ingredients[index].age === null
+    if (checkInputAge) return true
+    return !!value || '数を入力している場合、名前は必須です'
+  }
+}
+const ingredientAgeRules = (index: number) => {
+  return (value: string) => {
+    const checkInputAge = inputCookMenu2.value.ingredients[index].name !== ''
+    if (checkInputAge) return !!value || '名前を入力している場合、数は必須です'
+    return true
+  }
+}
+const seasoningNameRules = (index: number) => {
+  return (value: string) => {
+    const checkInputAge = inputCookMenu2.value.seasonings[index].age !== null
+    if (checkInputAge) return !!value || '数を入力している場合、名前は必須です'
+    return true
+  }
+}
+const seasoningAgeRules = (index: number) => {
+  return (value: string) => {
+    const checkInputAge = inputCookMenu2.value.seasonings[index].name !== ''
+    if (checkInputAge) return !!value || '名前を入力している場合、数は必須です'
+    return true
+  }
+}
+
+// 食材と調味料で名前 or 数を変更した際に実行される個別のバリデーション
+const checkValidateIngredient = async () => {
+  const todoValidationIndex = [3, 4]
+  todoValidationIndex.forEach(async (index) => await form.value.items[index].validate())
+}
+const checkValidateSeasoning = async () => {
+  const todoValidationIndex = [5, 6]
+  todoValidationIndex.forEach(async (index) => await form.value.items[index].validate())
+}
+
+// 食材と調味料の項目追加・削除のボタンクリックで実行される
+const addIngredient = () => inputCookMenu2.value.ingredients!.push({ name: '', age: undefined })
+const reduceIngredient = (index: number) => inputCookMenu2.value.ingredients!.splice(index, 1)
+const addSeasoning = () => inputCookMenu2.value.seasonings!.push({ name: '', age: undefined })
+const reduceSeasoning = (index: number) => inputCookMenu2.value.seasonings!.splice(index, 1)
+
+// 食材と調味料の数の×ボタンをクリックした時に動作する
+const delIngredientCount = (index: number) => {
+  inputCookMenu2.value.ingredients[index].age = null
+  checkValidateIngredient()
+}
+const delSeasoningCount = (index: number) => {
+  inputCookMenu2.value.seasonings[index].age = null
+  checkValidateSeasoning()
+}
+
+// 次のページで遷移する
+async function next() {
+  const validResult = await form.value.validate()
+  if (validResult.valid) emit('nextPage', inputCookMenu2)
+}
+</script>
+
 <template>
-  <v-form ref="form">
+  <v-form ref="form" v-model="valid">
     <v-row justify="center">
       <v-col cols="1"> 料理名 </v-col>
       <v-col cols="7">
         <v-text-field
           variant="underlined"
           :counter="30"
+          :rules="nameRules"
           v-model="inputCookMenu2.name"
           required
         ></v-text-field>
@@ -36,17 +142,29 @@
     <v-row v-for="(member, index) in inputCookMenu2.ingredients" :key="index" justify="center">
       <v-col cols="1"> 食材 </v-col>
       <v-col cols="3">
-        <v-text-field variant="underlined" label="名前" v-model="member.name"></v-text-field>
+        <v-text-field
+          variant="underlined"
+          label="名前"
+          v-model="member.name"
+          :rules="[ingredientNameRules(index)]"
+          @input="checkValidateIngredient"
+        ></v-text-field>
       </v-col>
       <v-col cols="2">
         <v-select
-          clearable
-          chips
           variant="underlined"
           label="数"
           v-model="member.age"
           :items="['0.3個', '0.5個', '1個', '1.5個', '2個', '2.5個', '3個']"
-        ></v-select>
+          :rules="[ingredientAgeRules(index)]"
+          @update:modelValue="checkValidateIngredient"
+        >
+          <template #selection="{ item }">
+            <v-chip closable @click:close="delIngredientCount(index)">
+              <span>{{ item.title }}</span></v-chip
+            >
+          </template>
+        </v-select>
       </v-col>
 
       <v-col cols="2">
@@ -66,12 +184,16 @@
     <v-row v-for="(member, index) in inputCookMenu2.seasonings" :key="index" justify="center">
       <v-col cols="1"> 調味料 </v-col>
       <v-col cols="3">
-        <v-text-field variant="underlined" label="名前" v-model="member.name"></v-text-field>
+        <v-text-field
+          variant="underlined"
+          label="名前"
+          v-model="member.name"
+          :rules="[seasoningNameRules(index)]"
+          @input="checkValidateSeasoning"
+        ></v-text-field>
       </v-col>
       <v-col cols="2">
         <v-select
-          clearable
-          chips
           variant="underlined"
           label="量"
           v-model="member.age"
@@ -87,7 +209,15 @@
             '大さじ4',
             '大さじ5'
           ]"
-        ></v-select>
+          :rules="[seasoningAgeRules(index)]"
+          @update:modelValue="checkValidateSeasoning"
+        >
+          <template #selection="{ item }">
+            <v-chip closable @click:close="delSeasoningCount(index)">
+              <span>{{ item.title }}</span></v-chip
+            >
+          </template>
+        </v-select>
       </v-col>
 
       <v-col cols="2">
@@ -131,40 +261,10 @@
   </v-form>
   <v-row justify="end">
     <v-col cols="2">
-      <v-btn color="blue" rounded="xl" size="x-large" @click="next"
+      <v-btn color="blue" rounded="xl" size="x-large" @click="next" :disabled="!valid"
         >内容の確認
         <v-icon icon="mdi-checkbox-marked-circle" end></v-icon>
       </v-btn>
     </v-col>
   </v-row>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { type inputCookMenu } from '@/model/cookMenu'
-
-const inputCookMenu2 = ref<inputCookMenu>({
-  name: '',
-  genre: undefined,
-  weight: undefined,
-  ingredients: [{ name: '', age: undefined }],
-  seasonings: [{ name: '', age: undefined }],
-  url: '',
-  memo: ''
-})
-
-// todo:propsの使い方がよくわからない
-// todo:commitの使い方がよくわからない
-const emit = defineEmits(['nextPage'])
-
-function next() {
-  console.log('イベントの発火')
-  emit('nextPage', 1, inputCookMenu2)
-}
-
-const addIngredient = () => inputCookMenu2.value.ingredients!.push({ name: '', age: undefined })
-const reduceIngredient = (index: number) => inputCookMenu2.value.ingredients!.splice(index, 1)
-
-const addSeasoning = () => inputCookMenu2.value.seasonings!.push({ name: '', age: undefined })
-const reduceSeasoning = (index: number) => inputCookMenu2.value.seasonings!.splice(index, 1)
-</script>
